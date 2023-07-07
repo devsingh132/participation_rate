@@ -17,6 +17,9 @@ pub struct Validator {
     pub index : String,
     pub validator : ValidatorData
 }
+/**
+ * Struct to map the response from the get validators api.
+ */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ValidatorResponse {
     pub finalized : bool,
@@ -24,6 +27,9 @@ pub struct ValidatorResponse {
 }
 
 impl ValidatorResponse {
+    /**
+     * Return a Map which maps the validator index to publickey
+     */
     pub fn validator_key_index_map(&mut self) -> HashMap<String, String> {
         let mut map : HashMap<String, String> = HashMap::new();
         let validators = &self.data;
