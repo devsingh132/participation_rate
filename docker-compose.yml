@@ -1,23 +1,19 @@
 version: "3.9"
 services:
   app:
-    image: pp:latest
-    # networks:
-    #   - mynetwork
-    # links:
-    #   - mysql:mysql
-    # restart: always
+    container_name: participation_rate
+    build: 
+      dockerfile: Dockerfile
     environment:
-      MYSQL_URL: mysql://user1:password@mysql2:3306/pp_rate
+      MYSQL_URL: mysql://user1:password@db_pp:3306/pp_rate
+      DELAY: 10
       RUST_BACKTRACE: 1
-    # network_mode: host
     ports:
       - "8080:8080"
     depends_on:
-      - mysql2
-  mysql2:
-    # hostname: mysql
-    container_name: mysql2
+      - db_pp
+  db_pp:
+    container_name: db_pp
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -26,14 +22,3 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - '3306:3306'
-    # networks:
-    #   - mynetwork
-    # volumes:
-    #   - mysql_data:/var/lib/mysql
-
-      # - "127.0.0.1:3000:3000"
-
-# volumes:
-#   mysql_data:
-# networks:
-  # mynetwork:

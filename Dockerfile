@@ -12,8 +12,6 @@ COPY src ./src
 
 COPY .env ./
 
-# Build the application
-# RUN cargo build --release
 
 # Set the entry point to run the application
-CMD cargo run
+CMD sleep ${DELAY} && cargo run

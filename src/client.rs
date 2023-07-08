@@ -1,6 +1,5 @@
-pub mod APIClient;
-pub mod BlockDataModel;
-pub mod APIServer;
+pub mod apiclient;
+pub mod apiserver;
 /*use reqwest::{Error, Client,};
 use reqwest::StatusCode;
 

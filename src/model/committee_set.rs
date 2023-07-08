@@ -1,5 +1,5 @@
-use std::iter::Map;
-use crate::model::CommitteeResponseData::CommitteeResponse;
+
+use crate::model::committee_response_data::CommitteeResponse;
 use std::collections::hash_map::HashMap;
 
 #[derive(Default)]

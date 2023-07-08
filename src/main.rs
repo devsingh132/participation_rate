@@ -1,24 +1,34 @@
 extern crate dotenv;
 use dotenv::dotenv;
-use crate::client::{APIClient, APIServer};
+use crate::client::{apiclient, apiserver};
 pub mod client;
 mod model;
-use mysql::*;
-use mysql::prelude::*;
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 
 #[tokio::main]
 async fn main() -> std::result::Result<(), Box<dyn std::error::Error>>{
     dotenv().ok();
-    let mut base = std::env::var("ETH_BASE_URL")?;
+    let base = std::env::var("ETH_BASE_URL").unwrap();
+    let mut client = apiclient::APIClient::new(base.as_str()).unwrap();
 
-    let mut client = APIClient::APIClient::new(base.as_str())?;
+    let thread1 = std::thread::spawn(move || {
+        client.index_new_slots();
+    });
+    
+    let thread2 = std::thread::spawn(move || {
+        let api_server = apiserver::APIServer::new().unwrap();
+        api_server.start_server().unwrap();
+    });
+    
+    let base = std::env::var("ETH_BASE_URL").unwrap();
+    let mut client = apiclient::APIClient::new(base.as_str()).unwrap();
     match client.get_recent_5_epochs().await {
-        Some(_) => println!("passed"),
-        None => println!("stoopped")
+        Some(_) => {
+            println!("Sucessfully indexed last 5 epoch");
+        },
+        None => println!("Unable to index last 5 epochs")
     }
-    let api_server = APIServer::APIServer::new().unwrap();
-    api_server.start_server()?;
+    thread1.join().unwrap();
+    thread2.join().unwrap();
     Ok(())
 
 }
